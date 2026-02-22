@@ -27,8 +27,8 @@
       grid-column: 1 / -1;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .title-block h1 { font-size: 1.1rem; font-weight: 700; color: #1a2910; letter-spacing: -0.01em; line-height: 1.3; }
-    .title-block p  { font-size: 0.85rem; color: #7a9455; margin-top: 2px; font-weight: 400; }
+    .title-block h1 { font-size: 1.4rem; font-weight: 700; color: #1a2910; letter-spacing: -0.01em; line-height: 1.3; }
+    .title-block p  { font-size: 1.05rem; color: #7a9455; margin-top: 2px; font-weight: 400; }
 
     /* LEFT PANEL */
     .left-panel {
@@ -173,7 +173,6 @@
     </div>
 
     <div class="panel-section" style="flex: 1; min-height: 0;">
-      <div class="panel-label">Map</div>
       <div class="map-container">
         <canvas id="map-canvas"></canvas>
       </div>
@@ -325,8 +324,8 @@ function drawChart(metric, sel, animate) {
     .on('click', (_,d) => handleSelect(d.country))
     .attr('stroke', d => (!hasSel || sel===d.country) ? '#7c3aed' : '#c4b0e828')
     .attr('stroke-width', d => {
-      const baseWidth = metric === 'Employment' ? 2.5 : 3.5;
-      const fadedWidth = metric === 'Employment' ? 1.5 : 2;
+      const baseWidth = metric === 'Employment' ? 1.8 : 3.5;
+      const fadedWidth = metric === 'Employment' ? 1.2 : 2;
       return (!hasSel || sel===d.country) ? baseWidth : fadedWidth;
     })
     .transition().duration(dur).ease(d3.easeCubicInOut)
@@ -355,8 +354,8 @@ function drawChart(metric, sel, animate) {
       .attr('cx', d => x(d.country) + bw/2)
       .attr('cy', d => y(d.women))
       .attr('r', d => {
-        const baseRadius = metric === 'Employment' ? 5.5 : 6.5;
-        const fadedRadius = metric === 'Employment' ? 3.5 : 4.5;
+        const baseRadius = metric === 'Employment' ? 4 : 6.5;
+        const fadedRadius = metric === 'Employment' ? 2.5 : 4.5;
         return (!hasSel || sel===d.country) ? baseRadius : fadedRadius;
       });
 
@@ -370,7 +369,7 @@ function drawChart(metric, sel, animate) {
       sellabLayer.append('text').attr('class','sel-label')
         .attr('x', bx).attr('y', y(sd.women) - 10)
         .attr('text-anchor','middle')
-        .attr('font-size','12px').attr('font-weight','700').attr('fill','#5b21b6')
+        .attr('font-size','15px').attr('font-weight','700').attr('fill','#5b21b6')
         .text(sd.women.toFixed(1) + '%');
     }
   }
@@ -389,11 +388,7 @@ function drawChart(metric, sel, animate) {
         .attr('opacity', 0)
     )
     .attr('font-size', d => {
-      if (metric === 'Employment') {
-        return sel===d.country ? '9px' : '7.5px';
-      } else {
-        return sel===d.country ? '11px' : '9.5px';
-      }
+      return sel===d.country ? '13px' : (metric === 'Employment' ? '7.5px' : '9.5px');
     })
     .attr('fill',       d => sel===d.country ? '#1a2910' : '#556b3a')
     .attr('font-weight',d => sel===d.country ? '700' : '500')
