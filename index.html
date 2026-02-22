@@ -17,52 +17,127 @@
     .slide {
       width: 100vw; height: 100vh;
       display: grid;
+      grid-template-columns: 280px 1fr;
       grid-template-rows: auto 1fr auto;
       padding: 16px 22px 10px;
-      gap: 8px;
+      gap: 12px;
     }
 
     header {
+      grid-column: 1 / -1;
       display: flex; align-items: center; justify-content: space-between;
     }
     .title-block h1 { font-size: 1.1rem; font-weight: 700; color: #1a2910; letter-spacing: -0.01em; line-height: 1.3; }
     .title-block p  { font-size: 0.85rem; color: #7a9455; margin-top: 2px; font-weight: 400; }
-    .source-bar     { font-size: 0.7rem; color: #9ab87a; padding: 0 2px 2px; }
 
-    .right-controls { display: flex; align-items: center; gap: 16px; }
-    .legend { display: flex; align-items: center; gap: 10px; }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #556b3a; font-weight: 600; }
-    .legend-swatch { width: 16px; height: 16px; border-radius: 2px; }
-
-    .toggle-group { display: flex; background: #d4e9b8; border-radius: 7px; padding: 3px; gap: 3px; }
-    .toggle-btn {
-      padding: 6px 18px; border: none; border-radius: 5px;
-      font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      background: transparent; color: #7a9455; transition: all 0.15s;
+    /* LEFT PANEL */
+    .left-panel {
+      grid-column: 1;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #d4e9b8;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(30,60,10,0.15);
     }
-    .toggle-btn.active { background: #EDF6E0; color: #1a2910; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
 
-    /* chart fills body, map overlays top-right */
-    .body { position: relative; min-height: 0; border-radius: 10px; overflow: hidden; background: #EDF6E0; }
+    .panel-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .panel-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #3a5820;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .toggle-group-vertical {
+      display: flex;
+      flex-direction: column;
+      background: #b8d898;
+      border-radius: 7px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .toggle-btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: #556b3a;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .toggle-btn.active {
+      background: #EDF6E0;
+      color: #1a2910;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .country-dropdown {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #b8d898;
+      border-radius: 6px;
+      background: #EDF6E0;
+      color: #1a2910;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .country-dropdown:hover {
+      border-color: #7a9455;
+    }
+    .country-dropdown:focus {
+      outline: none;
+      border-color: #556b3a;
+    }
+
+    /* MAP IN LEFT PANEL */
+    .map-container {
+      flex: 1;
+      min-height: 0;
+      background: #a8c98a;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    #map-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    /* CHART AREA */
+    .body {
+      grid-column: 2;
+      grid-row: 2;
+      position: relative;
+      min-height: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #EDF6E0;
+    }
     #chart-svg { display: block; width: 100%; height: 100%; }
 
-    /* map overlay — wider rectangle */
-    .map-panel {
-      position: absolute; top: 10px; right: 10px;
-      width: 310px; height: 160px;
-      border-radius: 8px; background: #b8d898;
-      overflow: hidden; display: flex; flex-direction: column;
-      box-shadow: 0 2px 14px rgba(30,60,10,0.25);
-      z-index: 10;
+    .source-bar {
+      grid-column: 1 / -1;
+      font-size: 0.7rem;
+      color: #9ab87a;
+      padding: 0 2px 2px;
     }
-    .map-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 4px 8px 1px; flex-shrink: 0;
-    }
-    .map-label { font-size: 0.7rem; font-weight: 700; color: #3a5820; text-transform: uppercase; letter-spacing: 0.06em; }
-    .map-hint  { font-size: 0.65rem; color: #7a9455; }
-    #map-canvas { flex: 1; display: block; width: 100%; cursor: pointer; }
-
 
     .tooltip {
       position: fixed; background: #1a2910ee; color: #edf6e0;
@@ -80,32 +155,41 @@
       <h1>Women make a significant proportion of agricultural labour, but lack ownership of land titles and resources</h1>
       <p id="subtitle">Share of women employed in agriculture (in %)</p>
     </div>
-    <div class="right-controls">
-      <div class="toggle-group">
-        <button class="toggle-btn active" data-metric="Employment">Employment</button>
-        <button class="toggle-btn" data-metric="Land Ownership">Land Ownership</button>
+  </header>
+
+  <div class="left-panel">
+    <div class="panel-section">
+      <div class="toggle-group-vertical">
+        <button class="toggle-btn active" data-metric="Employment">Agricultural Employment</button>
+        <button class="toggle-btn" data-metric="Land Ownership">Agricultural Land Ownership</button>
       </div>
     </div>
-  </header>
+
+    <div class="panel-section">
+      <div class="panel-label">Select Country</div>
+      <select class="country-dropdown" id="country-select">
+        <option value="">-- All Countries --</option>
+      </select>
+    </div>
+
+    <div class="panel-section" style="flex: 1; min-height: 0;">
+      <div class="panel-label">Map</div>
+      <div class="map-container">
+        <canvas id="map-canvas"></canvas>
+      </div>
+    </div>
+  </div>
 
   <div class="body">
     <svg id="chart-svg"></svg>
-    <div class="map-panel">
-      <div class="map-header">
-        <div class="map-label">Global South — Women %</div>
-        <div class="map-hint">click to highlight</div>
-      </div>
-      <canvas id="map-canvas"></canvas>
-    </div>
   </div>
+
   <div class="source-bar">Source: ILO, FAO (UN) via Our World in Data</div>
 </div>
 <div class="tooltip" id="tooltip"></div>
 
 <script>
 /* ═══════════════ NAME MAPPING ═══════════════ */
-/* GeoJSON NAME_LONG now matches CSV Entity names exactly (patched at source).
-   No remapping needed — pass through directly. */
 function shpToDataset(n) { return n; }
 
 const GLOBAL_SOUTH = new Set([
@@ -122,8 +206,10 @@ const GLOBAL_SOUTH = new Set([
   "Tunisia","Uganda","Uruguay","Venezuela","Vietnam","Zambia"
 ]);
 
+// Show all countries, not just Global South
+const SHOW_ALL_COUNTRIES = true;
+
 /* ═══════════════ DATA ═══════════════ */
-/* Start with empty data - will be populated from CSVs */
 const RAW = [];
 const dataByName = {};
 
@@ -132,27 +218,33 @@ const choroScale = d3.scaleSequential()
   .domain([0, 100])
   .interpolator(d3.interpolate('#f9e4b0', '#5b21b6'));
 
-
 /* ═══════════════ STATE ═══════════════ */
 let currentMetric = 'Employment';
-let selectedCountry = null;
+let selectedCountry = 'India';
 let geoData = null;
+let mapZoomCountry = 'India';
+
+/* Map animation state */
+let currentScale = 1;
+let currentOffX = 0;
+let currentOffY = 0;
+let targetScale = 1;
+let targetOffX = 0;
+let targetOffY = 0;
+let animationProgress = 1; // 1 = complete, 0 = just started
+let animationFrameId = null;
 
 /* ═══════════════ TOOLTIP ═══════════════ */
 const tipEl = document.getElementById('tooltip');
 function showTip(ev, country, wPct) {
   tipEl.innerHTML = `<strong>${country}</strong>
-    <span style="color:#c4a0ff">&#9632; Women: ${wPct.toFixed(1)}%</span><br>
-    <span style="color:#d4dd88">&#9632; Men: ${(100-wPct).toFixed(1)}%</span>`;
+    <span style="color:#c4a0ff">&#9632; Women: ${wPct.toFixed(1)}%</span>`;
   tipEl.style.opacity = '1';
 
-  /* Smart positioning: show on left if mouse on right half, else on right */
   const viewportWidth = window.innerWidth;
   if (ev.clientX > viewportWidth / 2) {
-    /* Mouse on right side → show tooltip on left */
     tipEl.style.left = (ev.clientX - tipEl.offsetWidth - 14) + 'px';
   } else {
-    /* Mouse on left side → show tooltip on right */
     tipEl.style.left = (ev.clientX + 14) + 'px';
   }
   tipEl.style.top  = (ev.clientY - 12) + 'px';
@@ -164,11 +256,11 @@ function buildData(metric) {
   const key = metric === 'Employment' ? 'em' : 'ow';
   return RAW
     .filter(d => d[key] !== null && d[key] !== undefined)
-    .map(d => ({ country: d.c, women: d[key], men: -(100 - d[key]) }))
+    .map(d => ({ country: d.c, women: d[key] }))
     .sort((a, b) => b.women - a.women);
 }
 
-/* ═══════════════ CHART with full positional transitions ═══════════════ */
+/* ═══════════════ LOLLIPOP CHART ═══════════════ */
 let chartInitialised = false;
 
 function drawChart(metric, sel, animate) {
@@ -176,19 +268,19 @@ function drawChart(metric, sel, animate) {
   const svgEl = document.getElementById('chart-svg');
   const W = svgEl.clientWidth  || 900;
   const H = svgEl.clientHeight || 460;
-  const margin = { top: 22, right: 14, bottom: 72, left: 30 };
+  const margin = { top: 22, right: 14, bottom: 90, left: 30 };
   const iW = W - margin.left - margin.right;
   const iH = H - margin.top  - margin.bottom;
 
   const svg = d3.select('#chart-svg');
   const dur = animate ? 650 : 0;
 
-  const x = d3.scaleBand().domain(data.map(d => d.country)).range([0, iW]).padding(0.12);
-  const y = d3.scaleLinear().domain([-100, 100]).range([iH, 0]);
+  const paddingValue = metric === 'Employment' ? 0.25 : 0.12;
+  const x = d3.scaleBand().domain(data.map(d => d.country)).range([0, iW]).padding(paddingValue);
+  const y = d3.scaleLinear().domain([0, 100]).range([iH, 0]);
   const zero = y(0);
   const bw = x.bandwidth();
 
-  /* ── first render: build static skeleton ── */
   if (!chartInitialised) {
     svg.selectAll('*').remove();
     chartInitialised = true;
@@ -196,7 +288,7 @@ function drawChart(metric, sel, animate) {
     const g = svg.append('g').attr('class','chart-g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    [-100,-75,-50,-25,0,25,50,75,100].forEach(v => {
+    [0,25,50,75,100].forEach(v => {
       g.append('line').attr('class','gridline')
         .attr('x1',0).attr('x2',iW).attr('y1',y(v)).attr('y2',y(v))
         .attr('stroke', v===0 ? '#4a6830' : '#c4dba0')
@@ -204,31 +296,52 @@ function drawChart(metric, sel, animate) {
         .attr('stroke-dasharray', v===0 ? null : '3,3');
     });
 
-    g.append('g').attr('class','bars-layer');
+    g.append('g').attr('class','lollipops-layer');
     g.append('g').attr('class','xlabels-layer');
     g.append('g').attr('class','sellabels-layer');
-
-    svg.append('text').attr('class','side-label-w')
-      .attr('x',margin.left+4).attr('y',margin.top+20)
-      .attr('font-size','20px').attr('font-weight','700').attr('fill','#7c3aed').text('▲ Women (%)');
-    svg.append('text').attr('class','side-label-m')
-      .attr('x',margin.left+4).attr('y',margin.top+iH-8)
-      .attr('font-size','20px').attr('font-weight','700').attr('fill','#CAD487').text('▼ Men (%)');
   }
 
   const g           = svg.select('.chart-g');
-  const barsLayer   = g.select('.bars-layer');
+  const lollipopsLayer = g.select('.lollipops-layer');
   const xlabsLayer  = g.select('.xlabels-layer');
   const sellabLayer = g.select('.sellabels-layer');
   const hasSel      = sel !== null;
 
-  /* ── WOMEN BARS — transition x, y, height together ── */
-  barsLayer.selectAll('.bar-w')
+  /* WOMEN LOLLIPOPS */
+  lollipopsLayer.selectAll('.stem-w')
     .data(data, d => d.country)
     .join(
-      enter => enter.append('rect').attr('class','bar-w')
-        .attr('x', d => x(d.country)).attr('width', bw)
-        .attr('y', zero).attr('height', 0).attr('rx', 1.5)
+      enter => enter.append('line').attr('class','stem-w')
+        .attr('x1', d => x(d.country) + bw/2)
+        .attr('x2', d => x(d.country) + bw/2)
+        .attr('y1', zero).attr('y2', zero)
+        .style('cursor','pointer')
+        .on('mousemove', (ev,d) => showTip(ev, d.country, d.women))
+        .on('mouseleave', hideTip)
+        .on('click', (_,d) => handleSelect(d.country))
+    )
+    .on('mousemove', (ev,d) => showTip(ev, d.country, d.women))
+    .on('mouseleave', hideTip)
+    .on('click', (_,d) => handleSelect(d.country))
+    .attr('stroke', d => (!hasSel || sel===d.country) ? '#7c3aed' : '#c4b0e828')
+    .attr('stroke-width', d => {
+      const baseWidth = metric === 'Employment' ? 2.5 : 3.5;
+      const fadedWidth = metric === 'Employment' ? 1.5 : 2;
+      return (!hasSel || sel===d.country) ? baseWidth : fadedWidth;
+    })
+    .transition().duration(dur).ease(d3.easeCubicInOut)
+      .attr('x1', d => x(d.country) + bw/2)
+      .attr('x2', d => x(d.country) + bw/2)
+      .attr('y1', zero)
+      .attr('y2', d => y(d.women));
+
+  lollipopsLayer.selectAll('.circle-w')
+    .data(data, d => d.country)
+    .join(
+      enter => enter.append('circle').attr('class','circle-w')
+        .attr('cx', d => x(d.country) + bw/2)
+        .attr('cy', zero)
+        .attr('r', 0)
         .style('cursor','pointer')
         .on('mousemove', (ev,d) => showTip(ev, d.country, d.women))
         .on('mouseleave', hideTip)
@@ -238,124 +351,224 @@ function drawChart(metric, sel, animate) {
     .on('mouseleave', hideTip)
     .on('click', (_,d) => handleSelect(d.country))
     .attr('fill', d => (!hasSel || sel===d.country) ? '#7c3aed' : '#c4b0e828')
-    .attr('width', bw)
     .transition().duration(dur).ease(d3.easeCubicInOut)
-      .attr('x', d => x(d.country))
-      .attr('y', d => y(d.women))
-      .attr('height', d => zero - y(d.women));
+      .attr('cx', d => x(d.country) + bw/2)
+      .attr('cy', d => y(d.women))
+      .attr('r', d => {
+        const baseRadius = metric === 'Employment' ? 5.5 : 6.5;
+        const fadedRadius = metric === 'Employment' ? 3.5 : 4.5;
+        return (!hasSel || sel===d.country) ? baseRadius : fadedRadius;
+      });
 
-  /* ── MEN BARS ── */
-  barsLayer.selectAll('.bar-m')
-    .data(data, d => d.country)
-    .join(
-      enter => enter.append('rect').attr('class','bar-m')
-        .attr('x', d => x(d.country)).attr('width', bw)
-        .attr('y', zero).attr('height', 0).attr('rx', 1.5)
-        .style('cursor','pointer')
-        .on('mousemove', (ev,d) => showTip(ev, d.country, d.women))
-        .on('mouseleave', hideTip)
-        .on('click', (_,d) => handleSelect(d.country))
-    )
-    .on('mousemove', (ev,d) => showTip(ev, d.country, d.women))
-    .on('mouseleave', hideTip)
-    .on('click', (_,d) => handleSelect(d.country))
-    .attr('fill', d => (!hasSel || sel===d.country) ? '#CAD487' : '#a8ddb028')
-    .attr('width', bw)
-    .transition().duration(dur).ease(d3.easeCubicInOut)
-      .attr('x', d => x(d.country))
-      .attr('y', zero)
-      .attr('height', d => y(d.men) - zero);
 
-  /* ── % LABELS on selected bar ── */
+  /* LABELS */
   sellabLayer.selectAll('*').remove();
   if (sel) {
     const sd = data.find(d => d.country === sel);
     if (sd) {
       const bx = x(sd.country) + bw / 2;
       sellabLayer.append('text').attr('class','sel-label')
-        .attr('x', bx).attr('y', y(sd.women) - 4)
+        .attr('x', bx).attr('y', y(sd.women) - 10)
         .attr('text-anchor','middle')
         .attr('font-size','12px').attr('font-weight','700').attr('fill','#5b21b6')
         .text(sd.women.toFixed(1) + '%');
-      sellabLayer.append('text').attr('class','sel-label')
-        .attr('x', bx).attr('y', y(sd.men) + 13)
-        .attr('text-anchor','middle')
-        .attr('font-size','12px').attr('font-weight','700').attr('fill','#8a9933')
-        .text((-sd.men).toFixed(1) + '%');
     }
   }
 
-  /* ── X LABELS — all countries, transition x position ── */
   xlabsLayer.selectAll('.xlabel')
     .data(data, d => d.country)
     .join(
       enter => enter.append('text').attr('class','xlabel')
-        .attr('text-anchor','end')
-        .attr('y', iH + 5)
+        .attr('text-anchor', hasSel ? 'middle' : 'end')
+        .attr('y', hasSel ? iH + 15 : iH + 5)
         .attr('x', d => x(d.country) + bw/2)
-        .attr('transform', d => { const cx = x(d.country)+bw/2; return `rotate(-55,${cx},${iH+5})`; })
+        .attr('transform', d => {
+          const cx = x(d.country) + bw/2;
+          return hasSel ? '' : `rotate(270,${cx},${iH+5})`;
+        })
         .attr('opacity', 0)
     )
-    .attr('font-size', d => sel===d.country ? '11px' : '9.5px')
+    .attr('font-size', d => {
+      if (metric === 'Employment') {
+        return sel===d.country ? '9px' : '7.5px';
+      } else {
+        return sel===d.country ? '11px' : '9.5px';
+      }
+    })
     .attr('fill',       d => sel===d.country ? '#1a2910' : '#556b3a')
     .attr('font-weight',d => sel===d.country ? '700' : '500')
-    .attr('y', iH + 5)
     .transition().duration(dur).ease(d3.easeCubicInOut)
-      .attr('opacity', 1)
+      .attr('text-anchor', hasSel ? 'middle' : 'end')
+      .attr('y', hasSel ? iH + 15 : iH + 5)
+      .attr('opacity', d => {
+        if (hasSel) {
+          return sel === d.country ? 1 : 0;
+        } else {
+          return 1;
+        }
+      })
       .attr('x', d => x(d.country) + bw/2)
-      .attr('transform', d => { const cx = x(d.country)+bw/2; return `rotate(-55,${cx},${iH+5})`; })
+      .attr('transform', d => {
+        const cx = x(d.country) + bw/2;
+        return hasSel ? '' : `rotate(270,${cx},${iH+5})`;
+      })
       .text(d => d.country);
 }
 
-/* ═══════════════ MAP (Canvas-based) ═══════════════ */
+/* ═══════════════ MAP WITH ZOOM ═══════════════ */
 const mapCanvas = document.getElementById('map-canvas');
 const mapCtx = mapCanvas.getContext('2d');
 let MAP_W, MAP_H, baseScale, baseOffX, baseOffY;
 let hoveredCountry = null;
 
+/* Get country bounding box */
+function getCountryBounds(countryName) {
+  if (!geoData) return null;
+
+  const feature = geoData.features.find(f => shpToDataset(f.properties.NAME_LONG) === countryName);
+  if (!feature || !feature.geometry) return null;
+
+  const polys = feature.geometry.type === 'Polygon' ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+
+  let minLon = Infinity, maxLon = -Infinity;
+  let minLat = Infinity, maxLat = -Infinity;
+
+  polys.forEach(poly => {
+    poly.forEach(ring => {
+      ring.forEach(([lon, lat]) => {
+        minLon = Math.min(minLon, lon);
+        maxLon = Math.max(maxLon, lon);
+        minLat = Math.min(minLat, lat);
+        maxLat = Math.max(maxLat, lat);
+      });
+    });
+  });
+
+  return { minLon, maxLon, minLat, maxLat };
+}
+
 function initMapCanvas() {
-  const panel = mapCanvas.parentElement;
-  const r = panel.getBoundingClientRect();
-  MAP_W = 310;
-  MAP_H = r.height - 22; /* subtract header height */
+  const container = mapCanvas.parentElement;
+  const r = container.getBoundingClientRect();
+  MAP_W = r.width;
+  MAP_H = r.height;
   mapCanvas.width = MAP_W * devicePixelRatio;
   mapCanvas.height = MAP_H * devicePixelRatio;
   mapCtx.scale(devicePixelRatio, devicePixelRatio);
 
-  /* Global South bbox: lon -118 to 141 (259° wide), lat -56 to 44 (100° tall)
-     Center: lon 11.5, lat -6 */
-  const pad = 8;
-  const lonMin = -118, lonMax = 141, latMin = -56, latMax = 44;
-  const lonRange = lonMax - lonMin; /* 259° */
-  const latRange = latMax - latMin; /* 100° */
-  const regionAspect = lonRange / latRange; /* ~2.59 */
-  const canvasAspect = MAP_W / MAP_H;
-
-  if (canvasAspect > regionAspect) {
-    /* Canvas wider → fit to height */
-    baseScale = (MAP_H - 2*pad) / (latRange / 180);
-    baseOffX = (MAP_W - baseScale * (lonRange / 180)) / 2;
-    baseOffY = pad;
-  } else {
-    /* Canvas taller → fit to width */
-    baseScale = (MAP_W - 2*pad) / (lonRange / 180);
-    baseOffX = pad;
-    baseOffY = (MAP_H - baseScale * (latRange / 180)) / 2;
-  }
-
-  /* Shift to center the region */
-  const unitLonMin = (lonMin + 180) / 360;
-  const unitLatMax = (90 - latMax) / 180;
-  baseOffX -= unitLonMin * baseScale * 2;
-  baseOffY -= unitLatMax * baseScale;
+  calculateMapProjection();
 }
 
-/* Equirectangular projection */
+function calculateMapProjection(animate = false) {
+  const pad = 8;
+  let lonMin, lonMax, latMin, latMax;
+
+  if (mapZoomCountry) {
+    const bounds = getCountryBounds(mapZoomCountry);
+    if (bounds) {
+      const lonPad = (bounds.maxLon - bounds.minLon) * 0.6;
+      const latPad = (bounds.maxLat - bounds.minLat) * 0.6;
+      lonMin = bounds.minLon - lonPad;
+      lonMax = bounds.maxLon + lonPad;
+      latMin = bounds.minLat - latPad;
+      latMax = bounds.maxLat + latPad;
+    } else {
+      // Fallback to Global South
+      lonMin = -118; lonMax = 141; latMin = -56; latMax = 44;
+    }
+  } else {
+    // Global South bbox - always show this when no country selected
+    lonMin = -118; lonMax = 141; latMin = -56; latMax = 44;
+  }
+
+  const lonRange = lonMax - lonMin;
+  const latRange = latMax - latMin;
+  const regionAspect = lonRange / latRange;
+  const canvasAspect = MAP_W / MAP_H;
+
+  let newScale, newOffX, newOffY;
+
+  if (canvasAspect > regionAspect) {
+    newScale = (MAP_H - 2*pad) / (latRange / 180);
+    newOffX = (MAP_W - newScale * (lonRange / 180)) / 2;
+    newOffY = pad;
+  } else {
+    newScale = (MAP_W - 2*pad) / (lonRange / 180);
+    newOffX = pad;
+    newOffY = (MAP_H - newScale * (latRange / 180)) / 2;
+  }
+
+  const unitLonMin = (lonMin + 180) / 360;
+  const unitLatMax = (90 - latMax) / 180;
+  newOffX -= unitLonMin * newScale * 2;
+  newOffY -= unitLatMax * newScale;
+
+  if (animate && animationProgress >= 1) {
+    // Start new animation
+    targetScale = newScale;
+    targetOffX = newOffX;
+    targetOffY = newOffY;
+    animationProgress = 0;
+
+    if (!animationFrameId) {
+      animateMapZoom();
+    }
+  } else {
+    // Immediate update (no animation)
+    baseScale = newScale;
+    baseOffX = newOffX;
+    baseOffY = newOffY;
+    currentScale = newScale;
+    currentOffX = newOffX;
+    currentOffY = newOffY;
+    targetScale = newScale;
+    targetOffX = newOffX;
+    targetOffY = newOffY;
+  }
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function animateMapZoom() {
+  const duration = 800; // ms
+  const fps = 60;
+  const increment = 1000 / (fps * duration);
+
+  function animate() {
+    animationProgress += increment;
+
+    if (animationProgress >= 1) {
+      animationProgress = 1;
+      baseScale = targetScale;
+      baseOffX = targetOffX;
+      baseOffY = targetOffY;
+      currentScale = targetScale;
+      currentOffX = targetOffX;
+      currentOffY = targetOffY;
+      animationFrameId = null;
+      drawMap(currentMetric, selectedCountry);
+      return;
+    }
+
+    const eased = easeInOutCubic(animationProgress);
+    baseScale = currentScale + (targetScale - currentScale) * eased;
+    baseOffX = currentOffX + (targetOffX - currentOffX) * eased;
+    baseOffY = currentOffY + (targetOffY - currentOffY) * eased;
+
+    drawMap(currentMetric, selectedCountry);
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  animationFrameId = requestAnimationFrame(animate);
+}
+
 function lonLatToUnit(lon, lat) {
   return [(lon + 180) / 360, (90 - lat) / 180];
 }
+
 function unitToScreen(ux, uy) {
-  /* ux,uy are in [0,1]. World aspect is 2:1, so x spans 2× baseScale */
   return [baseOffX + ux * baseScale * 2, baseOffY + uy * baseScale];
 }
 
@@ -364,8 +577,6 @@ function drawMap(metric, sel) {
   const key = metric === 'Employment' ? 'em' : 'ow';
 
   mapCtx.clearRect(0, 0, MAP_W, MAP_H);
-
-  /* Ocean background */
   mapCtx.fillStyle = '#a8c98a';
   mapCtx.fillRect(0, 0, MAP_W, MAP_H);
 
@@ -391,28 +602,25 @@ function drawMap(metric, sel) {
       });
     });
 
-    /* Fill */
     if (dname === sel) {
-      mapCtx.fillStyle = '#facc15'; /* selected: yellow */
+      mapCtx.fillStyle = '#facc15';
     } else if (dname === hoveredCountry) {
-      mapCtx.fillStyle = '#fdee88'; /* hover: light yellow */
+      mapCtx.fillStyle = '#fdee88';
     } else if (!isGS) {
-      mapCtx.fillStyle = '#d0e8b0'; /* non-GS: pale green */
+      mapCtx.fillStyle = '#d0e8b0';
     } else if (val === null) {
-      mapCtx.fillStyle = '#bdd89a'; /* GS no data: medium green */
+      mapCtx.fillStyle = '#bdd89a';
     } else {
       mapCtx.fillStyle = choroScale(val);
     }
     mapCtx.fill();
 
-    /* Borders */
     mapCtx.strokeStyle = dname === sel ? '#1a2910' : '#7aaa55';
     mapCtx.lineWidth = dname === sel ? 1.2 : 0.4;
     mapCtx.stroke();
   });
 }
 
-/* Hit test */
 function hitTestMap(mx, my) {
   const sx = mx, sy = my;
   const ux = (sx - baseOffX) / (baseScale * 2);
@@ -447,7 +655,7 @@ function pointInRing(px, py, ring) {
   return inside;
 }
 
-/* Events */
+/* Map events */
 mapCanvas.addEventListener('mousemove', ev => {
   const r = mapCanvas.getBoundingClientRect();
   const mx = ev.clientX - r.left;
@@ -459,7 +667,7 @@ mapCanvas.addEventListener('mousemove', ev => {
     drawMap(currentMetric, selectedCountry);
   }
 
-  if (country && GLOBAL_SOUTH.has(country)) {
+  if (country) {
     const key = currentMetric === 'Employment' ? 'em' : 'ow';
     const row = dataByName[country];
     if (row && row[key] !== null) {
@@ -484,7 +692,7 @@ mapCanvas.addEventListener('click', ev => {
   const my = ev.clientY - r.top;
   const country = hitTestMap(mx, my);
 
-  if (country && GLOBAL_SOUTH.has(country)) {
+  if (country) {
     const key = currentMetric === 'Employment' ? 'em' : 'ow';
     const row = dataByName[country];
     if (row && row[key] !== null) {
@@ -496,64 +704,84 @@ mapCanvas.addEventListener('click', ev => {
 /* ═══════════════ INTERACTION ═══════════════ */
 function handleSelect(country) {
   selectedCountry = selectedCountry === country ? null : country;
+
+  // Update dropdown
+  const dropdown = document.getElementById('country-select');
+  dropdown.value = selectedCountry || '';
+
+  // Update map zoom with animation
+  mapZoomCountry = selectedCountry;
+  calculateMapProjection(true); // animate = true
+
   drawChart(currentMetric, selectedCountry, false);
-  drawMap(currentMetric, selectedCountry);
+  // drawMap will be called by animation, or immediately if no animation
+  if (animationProgress >= 1) {
+    drawMap(currentMetric, selectedCountry);
+  }
 }
 
-/* ═══════════════ TOGGLE ═══════════════ */
+/* ═══════════════ CONTROLS ═══════════════ */
 const SUBTITLES = {
   Employment: 'Share of women employed in agriculture (in %)',
-  'Land Ownership':  'Share of women with secure tenure rights over agricultural land (in %)',
+  'Land Ownership':  'Share of women in agriculture who own land solely or jointly with a member of household (in %)',
 };
 
+// Metric toggle
 document.querySelectorAll('.toggle-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentMetric = btn.dataset.metric;
     document.getElementById('subtitle').textContent = SUBTITLES[currentMetric];
-    /* keep selection if the country has data in the new metric, else clear */
+
     if (selectedCountry) {
       const key = currentMetric === 'Employment' ? 'em' : 'ow';
       const row = dataByName[selectedCountry];
-      if (!row || row[key] === null || row[key] === undefined) selectedCountry = null;
+      if (!row || row[key] === null || row[key] === undefined) {
+        selectedCountry = null;
+        mapZoomCountry = null;
+        document.getElementById('country-select').value = '';
+        calculateMapProjection(true); // animate zoom out
+      }
     }
-    drawChart(currentMetric, selectedCountry, true);   /* animate = true */
-    drawMap(currentMetric, selectedCountry);
+    drawChart(currentMetric, selectedCountry, true);
+    if (animationProgress >= 1) {
+      drawMap(currentMetric, selectedCountry);
+    }
   });
 });
 
+// Country dropdown
+document.getElementById('country-select').addEventListener('change', (ev) => {
+  const country = ev.target.value;
+  if (country) {
+    selectedCountry = country;
+    mapZoomCountry = country;
+  } else {
+    selectedCountry = null;
+    mapZoomCountry = null;
+  }
+
+  calculateMapProjection(true); // animate = true
+  drawChart(currentMetric, selectedCountry, false);
+  if (animationProgress >= 1) {
+    drawMap(currentMetric, selectedCountry);
+  }
+});
+
 /* ═══════════════ INIT ═══════════════ */
-/* Show loading indicator */
-const loadingDiv = document.createElement('div');
-loadingDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #556b3a; font-weight: 600;';
-loadingDiv.textContent = 'Loading data...';
-document.body.appendChild(loadingDiv);
-
-/* Load data files with individual error tracking */
-const filePromises = [
-  { name: 'world_simple.geojson', promise: d3.json('world_simple.geojson') },
-  { name: 'employment.csv', promise: d3.csv('employment.csv') },
-  { name: 'womeninagri.csv', promise: d3.csv('womeninagri.csv') },
-  { name: 'landown.csv', promise: d3.csv('landown.csv') }
-];
-
-Promise.all(filePromises.map(f =>
-  f.promise.catch(err => {
-    console.error(`Failed to load ${f.name}:`, err);
-    throw new Error(`Failed to load ${f.name}: ${err.message}`);
-  })
-))
-  .then(([geoJson, employmentData, womenInAgriData, landownData]) => {
-    /* Remove loading indicator */
-    loadingDiv.remove();
-
+Promise.all([
+  d3.json('world_simple.geojson?v=' + Date.now()),
+  d3.csv('employment_final.csv?v=' + Date.now()),
+  d3.csv('landown-final.csv?v=' + Date.now())
+])
+  .then(([geoJson, employmentData, landownData]) => {
     geoData = geoJson;
 
-    /* Build RAW array from employment data */
+    // Load employment data - all countries
     employmentData.forEach(row => {
       const country = row.Entity;
-      if (!GLOBAL_SOUTH.has(country)) return; /* Only Global South */
+      if (!SHOW_ALL_COUNTRIES && !GLOBAL_SOUTH.has(country)) return;
 
       const femaleEmp = parseFloat(row['Female employment in agriculture']);
       if (isNaN(femaleEmp)) return;
@@ -561,13 +789,12 @@ Promise.all(filePromises.map(f =>
       RAW.push({ c: country, em: femaleEmp, ow: null });
     });
 
-    /* Merge ownership data from womeninagri.csv (only Female rows) */
-    womenInAgriData.forEach(row => {
+    // Load land ownership data - all countries
+    landownData.forEach(row => {
       const country = row.Entity;
-      if (row.Gender !== 'Female') return; /* Only Female rows */
-      if (!GLOBAL_SOUTH.has(country)) return; /* Only Global South */
+      if (!SHOW_ALL_COUNTRIES && !GLOBAL_SOUTH.has(country)) return;
 
-      const femaleOwn = parseFloat(row.Ownership);
+      const femaleOwn = parseFloat(row['female-landowners']);
       if (isNaN(femaleOwn)) return;
 
       const existing = RAW.find(r => r.c === country);
@@ -578,47 +805,26 @@ Promise.all(filePromises.map(f =>
       }
     });
 
-    /* Override with land ownership data from landown.csv (takes precedence) */
-    landownData.forEach(row => {
-      const country = row.Entity;
-      if (!GLOBAL_SOUTH.has(country)) return; /* Only Global South */
-
-      const femaleOwn = parseFloat(row['Female-landown']);
-      if (isNaN(femaleOwn)) return;
-
-      const existing = RAW.find(r => r.c === country);
-      if (existing) {
-        existing.ow = femaleOwn; /* Override existing value */
-      } else {
-        RAW.push({ c: country, em: null, ow: femaleOwn });
-      }
-    });
-
-    /* Build dataByName lookup */
     RAW.forEach(d => dataByName[d.c] = d);
 
+    // Populate dropdown with countries that have data for current metric
+    const dropdown = document.getElementById('country-select');
+    const countries = buildData(currentMetric).map(d => d.country).sort();
+    countries.forEach(country => {
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = country;
+      dropdown.appendChild(option);
+    });
+
+    // Set India as default selected in dropdown
+    dropdown.value = 'India';
+
     initMapCanvas();
-    drawChart(currentMetric, null, false);
-    drawMap(currentMetric, null);
+    drawChart(currentMetric, selectedCountry, false);
+    drawMap(currentMetric, selectedCountry);
   })
-  .catch(err => {
-    console.error('Data load error:', err);
-    /* Show error message to user */
-    document.body.innerHTML = `
-      <div style="padding: 40px; font-family: system-ui; max-width: 800px; margin: 0 auto;">
-        <h1 style="color: #c00;">Data Loading Error</h1>
-        <p style="margin: 20px 0;">Failed to load required data files. Please check:</p>
-        <ul style="line-height: 2;">
-          <li>All CSV and GeoJSON files are in the same directory as index.html</li>
-          <li>Files: employment.csv, womeninagri.csv, landown.csv, world_simple.geojson</li>
-          <li>GitHub Pages is enabled (Settings → Pages → Deploy from main branch)</li>
-        </ul>
-        <p style="margin: 20px 0; padding: 10px; background: #f5f5f5; font-family: monospace;">
-          Error: ${err.message || err}
-        </p>
-      </div>
-    `;
-  });
+  .catch(err => console.error('Data load error:', err));
 
 window.addEventListener('resize', () => {
   chartInitialised = false;
