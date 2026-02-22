@@ -530,12 +530,20 @@ loadingDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: tra
 loadingDiv.textContent = 'Loading data...';
 document.body.appendChild(loadingDiv);
 
-Promise.all([
-  d3.json('world_simple.geojson?v=' + Date.now()),
-  d3.csv('employment.csv?v=' + Date.now()),
-  d3.csv('womeninagri.csv?v=' + Date.now()),
-  d3.csv('landown.csv?v=' + Date.now())
-])
+/* Load data files with individual error tracking */
+const filePromises = [
+  { name: 'world_simple.geojson', promise: d3.json('world_simple.geojson') },
+  { name: 'employment.csv', promise: d3.csv('employment.csv') },
+  { name: 'womeninagri.csv', promise: d3.csv('womeninagri.csv') },
+  { name: 'landown.csv', promise: d3.csv('landown.csv') }
+];
+
+Promise.all(filePromises.map(f =>
+  f.promise.catch(err => {
+    console.error(`Failed to load ${f.name}:`, err);
+    throw new Error(`Failed to load ${f.name}: ${err.message}`);
+  })
+))
   .then(([geoJson, employmentData, womenInAgriData, landownData]) => {
     /* Remove loading indicator */
     loadingDiv.remove();
