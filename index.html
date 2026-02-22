@@ -524,6 +524,12 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
 });
 
 /* ═══════════════ INIT ═══════════════ */
+/* Show loading indicator */
+const loadingDiv = document.createElement('div');
+loadingDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #556b3a; font-weight: 600;';
+loadingDiv.textContent = 'Loading data...';
+document.body.appendChild(loadingDiv);
+
 Promise.all([
   d3.json('world_simple.geojson?v=' + Date.now()),
   d3.csv('employment.csv?v=' + Date.now()),
@@ -531,6 +537,9 @@ Promise.all([
   d3.csv('landown.csv?v=' + Date.now())
 ])
   .then(([geoJson, employmentData, womenInAgriData, landownData]) => {
+    /* Remove loading indicator */
+    loadingDiv.remove();
+
     geoData = geoJson;
 
     /* Build RAW array from employment data */
@@ -584,7 +593,24 @@ Promise.all([
     drawChart(currentMetric, null, false);
     drawMap(currentMetric, null);
   })
-  .catch(err => console.error('Data load error:', err));
+  .catch(err => {
+    console.error('Data load error:', err);
+    /* Show error message to user */
+    document.body.innerHTML = `
+      <div style="padding: 40px; font-family: system-ui; max-width: 800px; margin: 0 auto;">
+        <h1 style="color: #c00;">Data Loading Error</h1>
+        <p style="margin: 20px 0;">Failed to load required data files. Please check:</p>
+        <ul style="line-height: 2;">
+          <li>All CSV and GeoJSON files are in the same directory as index.html</li>
+          <li>Files: employment.csv, womeninagri.csv, landown.csv, world_simple.geojson</li>
+          <li>GitHub Pages is enabled (Settings → Pages → Deploy from main branch)</li>
+        </ul>
+        <p style="margin: 20px 0; padding: 10px; background: #f5f5f5; font-family: monospace;">
+          Error: ${err.message || err}
+        </p>
+      </div>
+    `;
+  });
 
 window.addEventListener('resize', () => {
   chartInitialised = false;
